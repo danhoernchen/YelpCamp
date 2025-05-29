@@ -1,0 +1,39 @@
+<% layout("./layouts/boilerplate.ejs" ) -%>
+<div class="col-6 offset-3">
+  <div class="card">
+    <div class="card-title card-header">
+      <h1><%= dispenser.name %></h1>
+    </div>
+    <img
+      src="<%- dispenser.image  %>"
+      alt=""
+      class="mb-3 img-fluid card-img-top"
+    />
+    <div class="card-body">
+      <ul class="list-unstyled mb-3">
+        <li class="text-muted"><%= dispenser.location %></li>
+      </ul>
+      <div class="card-text mb-3">
+        <p><%- dispenser.description %></p>
+      </div>
+      <div class="mb-3">
+        <form
+          action="/dispensers/<%= dispenser._id %>?_method=DELETE"
+          method="POST"
+        >
+          <Button class="btn btn-danger">Delete Dispenser</Button>
+        </form>
+      </div>
+      <div>
+        <div class="mb-3">
+          <a href="/dispensers/<%= dispenser._id  %>/edit"
+            ><Button class="btn btn-info">Edit Dispenser</Button></a
+          >
+        </div>
+        <div>
+          <a href="/dispensers" class="card-link">All Dispensers</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

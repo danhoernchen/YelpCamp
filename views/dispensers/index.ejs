@@ -1,0 +1,27 @@
+<% layout('./layouts/boilerplate.ejs') -%>
+
+<h1>All Dispensers</h1>
+<% for(let dispenser of dispensers) { %>
+<div class="card mt-3">
+  <div class="row">
+    <div class="col-md-4">
+      <img
+        src="<%= dispenser.image %>"
+        alt=""
+        class="img-fluid img-thumbnail"
+        style="max-width: 100%"
+      />
+    </div>
+    <div class="col-md-8">
+      <div class="card-title"><h5><%= dispenser.name %></h5></div>
+      <div class="card-text">
+        <p><%= dispenser.description %></p>
+        <p class="small text-muted"><%= dispenser.location %></p>
+      </div>
+      <a href="/dispensers/<%= dispenser._id %>" class="btn btn-primary"
+        >View <%= dispenser.name %></a
+      >
+    </div>
+  </div>
+</div>
+<% } %>

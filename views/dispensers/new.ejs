@@ -1,0 +1,74 @@
+<% layout("./layouts/boilerplate.ejs" ) -%>
+<div class="row">
+  <h1 class="text-center">Add New Dispenser</h1>
+  <div class="col-6 offset-3">
+    <form
+      action="/dispensers/new"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
+      <div class="mb-3">
+        <label for="name">Name</label>
+        <input
+          class="form-control"
+          type="text"
+          id="name"
+          name="dispenser[name]"
+          required
+        />
+        <div class="valid-feedback">Looking good!</div>
+      </div>
+      <div class="mb-3">
+        <label for="location">Location</label>
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="dispenser[location]"
+          required
+        />
+        <div class="valid-feedback">Looking good!</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price">Price</label>
+        <div class="input-group">
+          <span class="input-group-text" id="price-label">$</span>
+          <input
+            type="text"
+            class="form-control"
+            id="price"
+            placeholder="0.00"
+            aria-label="price"
+            aria-describedby="price-label"
+            name="dispenser[price]"
+            required
+          />
+        </div>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="mb-3">
+        <label for="image-url"> Image URL </label>
+        <input
+          class="form-control"
+          type="text"
+          id="image-url"
+          name="dispenser[image]"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="image-url"> Description </label>
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="dispenser[description]"
+          required
+        ></textarea>
+        <div class="valid-feedback">Looking good!</div>
+      </div>
+      <button class="btn btn-success mb-3">Create Dispenser</button>
+    </form>
+    <a href="/dispensers">All Dispensers</a>
+  </div>
+</div>
