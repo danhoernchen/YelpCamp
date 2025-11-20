@@ -1,6 +1,6 @@
 <% layout("./layouts/boilerplate.ejs" ) -%>
 <div class="col-6 offset-3">
-  <div class="card">
+  <div class="card mb-5">
     <div class="card-title card-header">
       <h1><%= dispenser.name %></h1>
     </div>
@@ -36,4 +36,44 @@
       </div>
     </div>
   </div>
+  <h2>Add a review</h2>
+  <form action="/dispensers/<%= dispenser._id%>/reviews" method="post">
+    <div class="mb-3">
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating</label>
+        <input
+          class="form-range"
+          type="range"
+          name="rating"
+          id="rating"
+          min="1"
+          max="5"
+        />
+        <!-- TODO extract the output js-->
+        <output for="rating" id="rangeValue" aria-hidden="true"></output>
+
+        <script>
+          // This is an example script, please modify as needed
+          const rangeInput = document.getElementById("rating");
+          const rangeOutput = document.getElementById("rangeValue");
+
+          // Set initial value
+          rangeOutput.textContent = rangeInput.value;
+
+          rangeInput.addEventListener("input", function () {
+            rangeOutput.textContent = this.value;
+          });
+        </script>
+      </div>
+      <label class="form-label" for="review">Review</label
+      ><textarea
+        class="form-control"
+        name="review[body]"
+        id="review"
+        cols="30"
+        rows="4"
+      ></textarea>
+      <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </form>
 </div>

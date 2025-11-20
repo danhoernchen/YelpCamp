@@ -3,8 +3,9 @@ const BagDispenser = require("../models/bagdispenser");
 const cities = require("./cities");
 var bacon = require("baconipsum");
 
-mongoose.connect("mongodb://localhost:27017/bag-dispenser");
-
+mongoose.connect(
+  "mongodb+srv://YelpCamp:sxZOafRDZghUq8va@dbhoernchen.tch1hhh.mongodb.net/?retryWrites=true&w=majority&appName=dbhoernchen"
+);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Mongoose connection error"));
 db.once("open", () => {

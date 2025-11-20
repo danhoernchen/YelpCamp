@@ -9,7 +9,9 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const { dispenserJoi } = require("./joiSchemas.js");
 
-mongoose.connect("mongodb://localhost:27017/bag-dispenser");
+mongoose.connect(
+  "mongodb+srv://YelpCamp:sxZOafRDZghUq8va@dbhoernchen.tch1hhh.mongodb.net/?retryWrites=true&w=majority&appName=dbhoernchen"
+);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Mongoose connection error"));
@@ -97,6 +99,13 @@ app.delete(
     const { id } = req.params;
     await BagDispenser.findByIdAndDelete(id);
     res.redirect("/dispensers");
+  })
+);
+
+app.post(
+  "/dispensers/:id/reviews",
+  AsyncWrapper(async (req, res) => {
+    res.send("Hello, Review!");
   })
 );
 

@@ -7,6 +7,10 @@ const bagdispenserSchema = new Schema({
   description: String,
   location: String,
   image: String,
+  reviews: {
+    type: Schema.Types.ObjectId,
+    ref: "Review",
+  },
 });
 
 module.exports = mongoose.model("BagDispenser", bagdispenserSchema);
