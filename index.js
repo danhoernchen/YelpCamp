@@ -2,12 +2,14 @@ const express = require("express");
 const { default: mongoose } = require("mongoose");
 const app = express();
 const path = require("path");
-const AsyncWrapper = require("./utils/AsyncWrapper");
-const BagDispenser = require("./models/bagdispenser");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
+
 const ejsMate = require("ejs-mate");
-const { dispenserJoi } = require("./joiSchemas.js");
+const dispenserRouter = require("./routes/dispenserRouter.js");
+const reviewRouter = require("./routes/reviewRouter.js");
+const session = require("express-session");
 
 mongoose.connect(
   "mongodb+srv://YelpCamp:sxZOafRDZghUq8va@dbhoernchen.tch1hhh.mongodb.net/?retryWrites=true&w=majority&appName=dbhoernchen"
@@ -24,90 +26,30 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
 
-const dispenserValidation = (req, res, next) => {
-  const { error } = dispenserJoi.validate(req.body);
-  if (error) {
-    const errMsg = error.details.map((el) => el.message).join("\n");
-    throw new ExpressError(errMsg, 400);
-  } else {
-    next();
-  }
+const sessionConfig = {
+  secret: "makemesecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+  },
 };
+app.use(session(sessionConfig));
 
-app.get(
-  "/",
-  AsyncWrapper(async (req, res) => {
-    const dispensers = await BagDispenser.find({});
-    res.render("dispensers/index", { dispensers });
-  })
-);
-
-app.get(
-  "/dispensers",
-  AsyncWrapper(async (req, res) => {
-    const dispensers = await BagDispenser.find({});
-    res.render("dispensers/index", { dispensers });
-  })
-);
-
-app.post(
-  "/dispensers/new",
-  dispenserValidation,
-  AsyncWrapper(async (req, res, next) => {
-    const dispenser = new BagDispenser(req.body.dispenser);
-    await dispenser.save();
-    res.redirect(`/dispensers/${dispenser._id}`);
-  })
-);
-
-app.get("/dispensers/new", (req, res) => {
-  res.render("dispensers/new");
+app.use(flash());
+//flash middleware
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  next();
 });
 
-app.get(
-  "/dispensers/:id",
-  AsyncWrapper(async (req, res) => {
-    const dispenser = await BagDispenser.findById(req.params.id);
-    res.render("dispensers/dispenser", { dispenser });
-  })
-);
-
-app.get(
-  "/dispensers/:id/edit",
-  AsyncWrapper(async (req, res) => {
-    const dispenser = await BagDispenser.findById(req.params.id);
-    res.render("dispensers/edit", { dispenser });
-  })
-);
-
-app.put(
-  "/dispensers/:id",
-  dispenserValidation,
-  AsyncWrapper(async (req, res) => {
-    const { id } = req.params;
-    const dispenser = await BagDispenser.findByIdAndUpdate(id, {
-      ...req.body.dispenser,
-    });
-    res.redirect(`/dispensers/${id}`);
-  })
-);
-
-app.delete(
-  "/dispensers/:id",
-  AsyncWrapper(async (req, res) => {
-    const { id } = req.params;
-    await BagDispenser.findByIdAndDelete(id);
-    res.redirect("/dispensers");
-  })
-);
-
-app.post(
-  "/dispensers/:id/reviews",
-  AsyncWrapper(async (req, res) => {
-    res.send("Hello, Review!");
-  })
-);
+app.use("/dispensers", dispenserRouter);
+app.use("/dispensers/:id/reviews", reviewRouter);
+app.get("/", (req, res) => {
+  res.redirect("/dispensers");
+});
 
 app.get("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
