@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Review = require("./Review");
 const Schema = mongoose.Schema;
 
 const bagdispenserSchema = new Schema({
@@ -7,10 +8,20 @@ const bagdispenserSchema = new Schema({
   description: String,
   location: String,
   image: String,
-  reviews: {
-    type: Schema.Types.ObjectId,
-    ref: "Review",
-  },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
+});
+
+bagdispenserSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Review.deleteMany({
+      _id: { $in: doc.reviews },
+    });
+  }
 });
 
 module.exports = mongoose.model("BagDispenser", bagdispenserSchema);

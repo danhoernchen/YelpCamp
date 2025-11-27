@@ -1,79 +1,110 @@
 <% layout("./layouts/boilerplate.ejs" ) -%>
-<div class="col-6 offset-3">
-  <div class="card mb-5">
-    <div class="card-title card-header">
-      <h1><%= dispenser.name %></h1>
-    </div>
-    <img
-      src="<%- dispenser.image  %>"
-      alt=""
-      class="mb-3 img-fluid card-img-top"
-    />
-    <div class="card-body">
-      <ul class="list-unstyled mb-3">
-        <li class="text-muted"><%= dispenser.location %></li>
-      </ul>
-      <div class="card-text mb-3">
-        <p><%- dispenser.description %></p>
+<div class="row">
+  <div class="col-6">
+    <div class="card mb-5">
+      <div class="card-title card-header">
+        <h1><%= dispenser.name %></h1>
       </div>
-      <div class="mb-3">
-        <form
-          action="/dispensers/<%= dispenser._id %>?_method=DELETE"
-          method="POST"
-        >
-          <Button class="btn btn-danger">Delete Dispenser</Button>
-        </form>
-      </div>
-      <div>
+      <img
+        src="<%- dispenser.image  %>"
+        alt=""
+        class="mb-3 img-fluid card-img-top"
+      />
+      <div class="card-body">
+        <ul class="list-unstyled mb-3">
+          <li class="text-muted"><%= dispenser.location %></li>
+        </ul>
+        <div class="card-text mb-3">
+          <p><%- dispenser.description %></p>
+        </div>
         <div class="mb-3">
-          <a href="/dispensers/<%= dispenser._id  %>/edit"
-            ><Button class="btn btn-info">Edit Dispenser</Button></a
+          <form
+            action="/dispensers/<%= dispenser._id %>?_method=DELETE"
+            method="POST"
           >
+            <Button class="btn btn-danger">Delete Dispenser</Button>
+          </form>
         </div>
         <div>
-          <a href="/dispensers" class="card-link">All Dispensers</a>
+          <div class="mb-3">
+            <a href="/dispensers/<%= dispenser._id  %>/edit"
+              ><Button class="btn btn-info">Edit Dispenser</Button></a
+            >
+          </div>
+          <div>
+            <a href="/dispensers" class="card-link">All Dispensers</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <h2>Add a review</h2>
-  <form action="/dispensers/<%= dispenser._id%>/reviews" method="post">
-    <div class="mb-3">
+  <div class="col-6">
+    <h2>Add a review</h2>
+    <form
+      action="/dispensers/<%= dispenser._id%>/reviews"
+      method="post"
+      class="mb-3 needs-validation"
+      novalidate
+    >
       <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <input
-          class="form-range"
-          type="range"
-          name="rating"
-          id="rating"
-          min="1"
-          max="5"
-        />
-        <!-- TODO extract the output js-->
-        <output for="rating" id="rangeValue" aria-hidden="true"></output>
+        <div class="mb-3">
+          <label for="rating" class="form-label">Rating</label>
+          <input
+            class="form-range"
+            type="range"
+            name="review[rating]"
+            id="rating"
+            min="1"
+            max="5"
+          />
+          <!-- TODO extract the output js-->
+          <output for="rating" id="rangeValue" aria-hidden="true"></output>
 
-        <script>
-          // This is an example script, please modify as needed
-          const rangeInput = document.getElementById("rating");
-          const rangeOutput = document.getElementById("rangeValue");
+          <script>
+            // This is an example script, please modify as needed
+            const rangeInput = document.getElementById("rating");
+            const rangeOutput = document.getElementById("rangeValue");
 
-          // Set initial value
-          rangeOutput.textContent = rangeInput.value;
+            // Set initial value
+            rangeOutput.textContent = rangeInput.value;
 
-          rangeInput.addEventListener("input", function () {
-            rangeOutput.textContent = this.value;
-          });
-        </script>
+            rangeInput.addEventListener("input", function () {
+              rangeOutput.textContent = this.value;
+            });
+          </script>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="review">Review</label
+          ><textarea
+            class="form-control"
+            name="review[body]"
+            id="review"
+            cols="30"
+            rows="4"
+            required
+          ></textarea>
+          <div class="valid-feedback">Looking good!</div>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
       </div>
-      <label class="form-label" for="review">Review</label
-      ><textarea
-        class="form-control"
-        name="review[body]"
-        id="review"
-        cols="30"
-        rows="4"
-      ></textarea>
-      <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+    <% for(let review of dispenser.reviews) { %>
+    <div class="card mb-3">
+      <div class="card-header">
+        <p><%= review.rating %></p>
+      </div>
+      <div class="card-body">
+        <p><%= review.body%></p>
+      </div>
+      <div class="mb-3">
+        <form
+          action="/dispensers/<%= dispenser._id %>/reviews/<%= review._id %>?_method=DELETE"
+          method="POST"
+        >
+          <Button class="btn btn-danger">Delete Review</Button>
+        </form>
+      </div>
     </div>
-  </form>
+    <% } %>
+  </div>
 </div>
